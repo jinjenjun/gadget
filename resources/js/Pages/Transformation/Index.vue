@@ -2,11 +2,14 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { usePage } from '@inertiajs/vue3';
+import '@/../scss/main.scss';
 
 const props = usePage().props;
 const result = ref(props.result || null);
 const text = ref('');
 const loading = ref(false);
+
+const input = ref('')
 
 const submit = async () => {
     if (!text.value) return;
@@ -29,6 +32,7 @@ const submit = async () => {
 <template>
     <div class="p-4 max-w-xl mx-auto">
         <h1 class="text-2xl font-bold mb-4">轉換器範例</h1>
+        <ElInput v-model="input" style="width: 240px" placeholder="Please input" />
 
         <textarea
             v-model="text"

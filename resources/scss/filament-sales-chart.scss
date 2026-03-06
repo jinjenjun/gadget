@@ -1,0 +1,113 @@
+@use './element-plus.scss' as *;
+
+$aitehub-orange: #d55928 !important;
+$aitehub-brown: #4b2c25 !important;
+$aitehub-light-brown: #efe8e5 !important;
+$aitehub-gray: #cbbfbb !important;
+$aitehub-light-gray: #e4e4e7 !important;
+$aitehub-dark-gray: #bbbbbb !important;
+
+#sales-chart-homepage {
+  .bg-primary {
+    background-color: $aitehub-brown;
+  }
+
+  .bg-secondary {
+    background-color: $aitehub-orange;
+  }
+
+  .bg-light-brown {
+    background-color: $aitehub-light-brown;
+  }
+
+  .text-primary {
+    color: $aitehub-brown;
+  }
+
+  .text-secondary {
+    color: $aitehub-orange;
+  }
+
+  .border-primary {
+    border-color: $aitehub-brown;
+  }
+
+  .border-secondary {
+    border-color: $aitehub-orange;
+  }
+
+  .border-gray {
+    border-color: $aitehub-gray;
+  }
+
+  .border-light-gray {
+    border-color: $aitehub-light-gray;
+  }
+
+  .border-dark-gray {
+    border-color: $aitehub-dark-gray;
+  }
+
+  .border-light-brown {
+    border-color: $aitehub-light-brown;
+  }
+}
+
+html.dark #sales-chart-homepage {
+  .default-page {
+    color: #e2e8f0;
+  }
+
+  .el-select__wrapper,
+  .el-input__wrapper {
+    border: 1px solid #334155 !important;
+    background-color: #0f172a !important;
+    box-shadow: none !important;
+  }
+
+  .el-select__selected-item,
+  .el-input__inner {
+    color: #f8fafc !important;
+  }
+
+  .el-select__placeholder,
+  .el-input__inner::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  .el-select__caret {
+    color: #94a3b8 !important;
+  }
+
+  .sales-rank-table thead th {
+    background-color: #111827 !important;
+    color: #f8fafc !important;
+  }
+
+  .sales-rank-table tbody tr:nth-child(odd),
+  .sales-rank-table tbody tr:nth-child(odd) td {
+    background-color: #1f2937 !important;
+    color: #f8fafc !important;
+  }
+
+  .sales-rank-table tbody tr:nth-child(even),
+  .sales-rank-table tbody tr:nth-child(even) td {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+  }
+}
+
+html.dark .sales-chart-select-popper {
+  border-color: #334155 !important;
+  background-color: #0f172a !important;
+}
+
+html.dark .sales-chart-select-popper .el-select-dropdown__item {
+  color: #cbd5e1 !important;
+}
+
+html.dark .sales-chart-select-popper .el-select-dropdown__item.hover,
+html.dark .sales-chart-select-popper .el-select-dropdown__item:hover {
+  color: #f8fafc !important;
+  background-color: #1e293b !important;
+}

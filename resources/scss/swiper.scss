@@ -1,0 +1,15 @@
+//***=====色彩管理=====***
+$aitehub-brown: #4b2c25 !important;
+$aitehub-orange: #d55928 !important;
+$aitehub-light-brown: #efe8e5 !important;
+$aitehub-gray: #cbbfbb !important;
+$aitehub-light-gray: #e4e4e7 !important;
+$aitehub-pink: #faf7f6 !important;
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: $aitehub-orange;
+}
+.swiper-pagination-bullet-active {
+    background-color: $aitehub-orange;
+}

@@ -1,0 +1,166 @@
+//***=====色彩管理=====***
+$aitehub-orange: #d55928 !important;
+$aitehub-brown: #4b2c25 !important;
+$aitehub-light-brown: #efe8e5 !important;
+$aitehub-dark-gray: #bbbbbb !important;
+$aitehub-gray: #cbbfbb !important;
+$aitehub-light-gray: #e4e4e7 !important;
+$aitehub-red: #c80000 !important;
+$aitehub-pink: #faf7f6 !important;
+$aitehub-green: #317d00 !important;
+
+.tiptap * {
+  font-family: 'Noto Serif TC', 'Microsoft JhengHei', sans-serif !important;
+  touch-action: manipulation !important;
+  line-height: 1.8 !important;
+}
+
+.tiptap h1 {
+  font-size: 34px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap h2 {
+  font-size: 32px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap h3 {
+  font-size: 28px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap h4 {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap h5 {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap h6 {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap p {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  color: $aitehub-brown;
+}
+
+.tiptap p:empty::before {
+  content: '';
+  display: block;
+  height: 2em;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .tiptap h1 {
+    font-size: 32px !important;
+  }
+
+  .tiptap h2 {
+    font-size: 30px !important;
+  }
+
+  .tiptap h3 {
+    font-size: 26px !important;
+  }
+
+  .tiptap h4 {
+    font-size: 22px !important;
+  }
+
+  .tiptap h5 {
+    font-size: 18px !important;
+  }
+
+  .tiptap h6 {
+    font-size: 18px !important;
+  }
+
+  .tiptap p {
+    font-size: 18px !important;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .tiptap h1 {
+    font-size: 20px !important;
+  }
+
+  .tiptap h2 {
+    font-size: 20px !important;
+  }
+
+  .tiptap h3 {
+    font-size: 18px !important;
+  }
+
+  .tiptap h4 {
+    font-size: 18px !important;
+  }
+
+  .tiptap h5 {
+    font-size: 18px !important;
+  }
+
+  .tiptap h6 {
+    font-size: 18px !important;
+  }
+
+  .tiptap p {
+    font-size: 16px !important;
+  }
+}
+
+.tiptap .text-wrapper {
+  width: 100%;
+  display: flex;
+}
+
+.tiptap .text-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #e4e4e7;
+  transition: border 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.tiptap .text-item.active {
+  border-bottom: 3px solid rgba(251, 191, 36, 1);
+}
+
+.tiptap-content table,
+.tiptap-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.tiptap-content p,
+.tiptap-content strong,
+.tiptap-content span {
+  word-break: break-word;
+}
+
+.tiptap-content table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tiptap-content td,
+.tiptap-content th {
+  padding: 8px;
+}
