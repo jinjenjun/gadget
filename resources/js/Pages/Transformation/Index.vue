@@ -31,7 +31,7 @@ const submit = async () => {
 
 <template>
     <div class="p-4 max-w-xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">轉換器範例</h1>
+        <h1 class="font-bold mb-4 text-page-title text-primary">轉換器範例</h1>
         <ElInput v-model="input" style="width: 240px" placeholder="Please input" />
 
         <textarea
