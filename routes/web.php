@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransformationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,5 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/transformation', [TransformationController::class, 'index'])->name('transformation.index');
+
+Route::post('/transformation', [TransformationController::class, 'transform'])->name('transformation.transform');
 
 require __DIR__.'/auth.php';
