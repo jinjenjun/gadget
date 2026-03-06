@@ -1,0 +1,10 @@
+export * as main from './main.js';
+export * as account from './account.js';
+export * as cart from './cart.js';
+export * as checkout from './checkout.js';
+export * as course from './course.js';
+export * as vimeo from './vimeo.js';
+export * as point from './point.js';
+export * as reader from './reader.js';
+export * as bookshelf from './bookshelf.js';
+export * as category from './category.js';
