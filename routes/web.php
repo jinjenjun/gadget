@@ -29,4 +29,10 @@ Route::get('/transformation', [TransformationController::class, 'index'])->name(
 
 Route::post('/transformation', [TransformationController::class, 'transform'])->name('transformation.transform');
 
+Route::post('/transformation', [TransformationController::class, 'epubTransformation'])
+    ->name('epub.epub-transformation');
+
+Route::post('/transformation', [TransformationController::class, 'clearEpubTempFiles'])
+    ->name('epub.cleanup-all');
+
 require __DIR__.'/auth.php';

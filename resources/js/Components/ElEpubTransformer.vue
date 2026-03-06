@@ -5,6 +5,7 @@ import * as APIs from '@/APIs';
 import ElEpubReaderTrial from '@/Components/ElEpubReaderTrial.vue';
 import ElInfoButton from '@/Components/ElInfoButton.vue';
 import ElInfoLoading from '@/Components/ElInfoLoading.vue';
+import { ElNotification } from 'element-plus'
 
 const isLoading = ref(false);
 const file = ref(null);

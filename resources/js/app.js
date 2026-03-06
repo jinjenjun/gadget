@@ -1,7 +1,7 @@
 import '../css/app.css';
 import './bootstrap';
 import ElementPlus from 'element-plus'
-
+import 'element-plus/dist/index.css';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
@@ -21,7 +21,7 @@ createInertiaApp({
             .use(plugin)
             .use(ElementPlus)
             .use(ZiggyVue)
-            .mount(el);
+            .mount(el)
     },
     progress: {
         color: '#4B5563',
