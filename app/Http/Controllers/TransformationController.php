@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +21,6 @@ class TransformationController extends Controller
         $text = $request->input('text');
         $transformed = strtoupper($text);
 
-        // ✅ 回傳 JSON
         return response()->json([
             'original' => $text,
             'transformed' => $transformed,

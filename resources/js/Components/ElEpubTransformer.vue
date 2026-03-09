@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import * as helpers from '@/Libs/helpers';
 import * as APIs from '@/APIs';
+import '@/../scss/main.scss';
 import ElEpubReaderTrial from '@/Components/ElEpubReaderTrial.vue';
 import ElInfoButton from '@/Components/ElInfoButton.vue';
 import ElInfoLoading from '@/Components/ElInfoLoading.vue';
@@ -116,7 +117,6 @@ onMounted(() => {
   resetData();
 })
 </script>
-
 <template>
   <ElInfoLoading v-if="isLoading" />
   <div
@@ -139,12 +139,12 @@ onMounted(() => {
             v-if="!epubReaderData.outputFileUrl"
           >
             <p class="mb-5">Epub檔案轉換:</p>
-            <div class="flex flex-col space-x-2 md:flex-row">
+            <div class="flex space-x-2 justify-center items-center">
               <input
                 type="file"
                 accept=".epub"
                 @change="onChange"
-                class="mb-2 w-full rounded !text-xs md:mb-0 md:py-1"
+                class="cursor-pointer w-full rounded !text-xs md:mb-0 p-2 lg:p-3 file:p-1 file:border-0 file:text-white file:rounded file:bg-orange-700 hover:file:cursor-pointer"
               />
               <ElInfoButton @click="upload" :disabled="uploading">
                 {{ uploading ? '轉檔中...' : '開始轉換' }}
@@ -166,7 +166,7 @@ onMounted(() => {
 <!--        <div class="w-full flex flex-col items-start justify-start md:w-[50vw] opacity-0">-->
 <!--          <ElInfoButton @click="epubReaderData.active = true">閱讀</ElInfoButton>-->
 <!--        </div>-->
-<!--        <ElEpubReaderTrial v-if="epubReaderData.active" />-->
+        <ElEpubReaderTrial v-if="epubReaderData.active" />
       </div>
     </div>
   </div>
