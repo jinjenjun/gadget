@@ -38,7 +38,7 @@ async function upload() {
 
   try {
     const res = await APIs.unlock.reader.epubTransformation(
-      route('test.epub.epub-transformation'),
+      route('transformation.epub'),
       fd,
     );
 
@@ -69,7 +69,7 @@ async function upload() {
 const clearEpubData = async () => {
   try {
     await APIs.unlock.reader.clearTempData(
-      route('test.epub.cleanup-all')
+      route('transformation.cleanup')
     );
 
     helpers.devConsole.log('清除暫存檔案成功');

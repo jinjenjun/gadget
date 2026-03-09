@@ -29,10 +29,12 @@ Route::get('/transformation', [TransformationController::class, 'index'])->name(
 
 Route::post('/transformation', [TransformationController::class, 'transform'])->name('transformation.transform');
 
-Route::post('/transformation', [TransformationController::class, 'epubTransformation'])
-    ->name('epub.epub-transformation');
+// EPUB 轉檔
+Route::post('/transformation/epub', [TransformationController::class, 'epubTransformation'])
+    ->name('transformation.epub');
 
-Route::post('/transformation', [TransformationController::class, 'clearEpubTempFiles'])
-    ->name('epub.cleanup-all');
+// 清除暫存
+Route::post('/transformation/cleanup', [TransformationController::class, 'clearEpubTempFiles'])
+    ->name('transformation.cleanup');
 
 require __DIR__.'/auth.php';

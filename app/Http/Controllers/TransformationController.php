@@ -96,4 +96,38 @@ class TransformationController extends Controller
             'stderr'   => $stderr,
         ]);
     }
+
+    public function clearEpubTempFiles(): JsonResponse
+    {
+        $inputDir = public_path('public-doc/text-file/input');
+        $outputDir = public_path('public-doc/text-file/output');
+
+        $deleted = [
+            'input'  => 0,
+            'output' => 0,
+        ];
+
+        if (is_dir($inputDir)) {
+            foreach (\File::files($inputDir) as $file) {
+                if (in_array(strtolower($file->getExtension()), ['doc', 'docx', 'epub'])) {
+                    @\File::delete($file->getRealPath());
+                    $deleted['input']++;
+                }
+            }
+        }
+
+        if (is_dir($outputDir)) {
+            foreach (\File::files($outputDir) as $file) {
+                if (strtolower($file->getExtension()) === 'epub') {
+                    @\File::delete($file->getRealPath());
+                    $deleted['output']++;
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => '暫存檔已清空',
+            'deleted' => $deleted,
+        ]);
+    }
 }

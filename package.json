@@ -22,9 +22,11 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "adm-zip": "^0.5.16",
         "crypto-js": "^4.2.0",
         "element-plus": "^2.13.3",
         "epubjs": "^0.3.93",
-        "idb-keyval": "^6.2.2"
+        "idb-keyval": "^6.2.2",
+        "jsdom": "^28.1.0"
     }
 }
