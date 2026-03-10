@@ -43,7 +43,7 @@
     "build": {
         "appId": "com.gordon.gedget",
         "productName": "解鎖小工具",
-        "artifactName": "${productName}-Setup.${ext}",
+        "artifactName": "${productName}-${version}-${target}.${ext}",
         "compression": "maximum",
         "asar": true,
         "directories": {
@@ -64,7 +64,13 @@
         "nodeGypRebuild": false,
         "win": {
             "icon": "resources/img/logo.ico",
-            "target": ["nsis", "portable"]
+            "target": [
+                "portable",
+                {
+                    "target": "nsis",
+                    "arch": ["x64"]
+                }
+            ]
         },
         "linux": {
             "icon": "resources/img/logo.png"
@@ -75,7 +81,7 @@
         "nsis": {
             "installerIcon": "resources/img/logo.ico",
             "uninstallerIcon": "resources/img/logo.ico",
-            "oneClick": true,
+            "oneClick": false,
             "perMachine": false,
             "allowElevation": true,
             "allowToChangeInstallationDirectory": true

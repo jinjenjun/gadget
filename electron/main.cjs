@@ -1,63 +1,81 @@
-const { app, BrowserWindow } = require('electron')
-const { exec } = require('child_process')
+const { app, BrowserWindow } = require('electron');
+const { exec } = require('child_process');
+const path = require('path');
+const http = require('http');
 
-let mainWindow
-let phpServer
+let mainWindow;
+let phpServer;
+
+// 單一實例鎖
 const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) app.quit();
 
-if (!gotTheLock) {
-    app.quit();
-}
-
-app.on("second-instance", () => {
+app.on('second-instance', () => {
     if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.focus();
     }
 });
 
-// ⚠️ 在 Linux / WSL 上避免 GPU / GLX 問題
-app.commandLine.appendSwitch('disable-gpu')
-app.commandLine.appendSwitch('no-sandbox')
-app.commandLine.appendSwitch('disable-software-rasterizer')
-app.commandLine.appendSwitch('use-gl', 'swiftshader') // 軟體渲染
+// GPU / 渲染安全設定
+app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('no-sandbox');
+app.commandLine.appendSwitch('disable-software-rasterizer');
+app.commandLine.appendSwitch('use-gl', 'swiftshader');
 
+// 建立視窗
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
-        icon: 'resources/img/logo.ico',
+        minWidth: 800,
+        minHeight: 600,
+        icon: path.join(__dirname, '../resources/img/logo.ico'), // portable safe
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
         }
-    })
+    });
 
-    mainWindow.loadURL('http://127.0.0.1:8085')
+    mainWindow.loadURL('http://127.0.0.1:8085');
 
     mainWindow.on('closed', () => {
-        mainWindow = null
-        if (phpServer) phpServer.kill()
-    })
+        mainWindow = null;
+        if (phpServer) {
+            phpServer.kill();
+            phpServer = null;
+        }
+    });
 }
 
-app.whenReady().then(() => {
-    // 啟動 PHP server
-    phpServer = exec('php artisan serve --host=127.0.0.1 --port=8085', (err, stdout, stderr) => {
-        if (err) console.error(err)
-    })
+// 啟動 PHP server，並 polling 確認啟動後再開窗
+function startPhpServer() {
+    phpServer = exec(
+        'php artisan serve --host=127.0.0.1 --port=8085',
+        { cwd: path.join(__dirname, '..') },
+        (err, stdout, stderr) => {
+            if (err) console.error(err);
+            if (stdout) console.log(stdout);
+            if (stderr) console.error(stderr);
+        }
+    );
 
-    // 等 3 秒再開 Electron 視窗（確保 PHP server 起來）
-    setTimeout(() => createWindow(), 3000)
-})
+    const checkServer = () => {
+        http.get('http://127.0.0.1:8085', () => createWindow())
+            .on('error', () => setTimeout(checkServer, 200));
+    };
+    checkServer();
+}
 
-// 關閉所有視窗時退出
+app.whenReady().then(() => startPhpServer());
+
+// 所有視窗關閉時退出
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
-})
+    if (phpServer) phpServer.kill();
+    if (process.platform !== 'darwin') app.quit();
+});
 
+// macOS 特殊處理
 app.on('activate', () => {
-    if (mainWindow === null) createWindow()
-})
+    if (!mainWindow) createWindow();
+});
