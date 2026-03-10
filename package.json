@@ -4,7 +4,7 @@
     "type": "module",
     "name": "aitehub-gedget",
     "version": "1.0.0",
-    "description": "aitehub desktop app",
+    "description": "解鎖小工具 - Aitehub Gadget",
     "main": "electron/main.cjs",
     "author": "Gordon",
     "scripts": {
@@ -44,6 +44,8 @@
         "appId": "com.gordon.gedget",
         "productName": "解鎖小工具",
         "artifactName": "${productName}-${target}.${ext}",
+        "compression": "maximum",
+        "asar": true,
         "directories": {
             "output": "dist"
         },
@@ -58,6 +60,8 @@
             "composer.json",
             "package.json"
         ],
+        "npmRebuild": false,
+        "nodeGypRebuild": false,
         "win": {
             "icon": "resources/img/logo.ico",
             "target": ["nsis", "portable"]
@@ -70,6 +74,7 @@
         },
         "nsis": {
             "installerIcon": "resources/img/logo.ico",
+            "uninstallerIcon": "resources/img/logo.ico",
             "oneClick": true,
             "perMachine": false,
             "allowElevation": true,

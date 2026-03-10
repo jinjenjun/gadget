@@ -1,19 +1,32 @@
 const { app, BrowserWindow } = require('electron')
 const { exec } = require('child_process')
 
+let mainWindow
+let phpServer
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+    app.quit();
+}
+
+app.on("second-instance", () => {
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.focus();
+    }
+});
+
 // ⚠️ 在 Linux / WSL 上避免 GPU / GLX 問題
 app.commandLine.appendSwitch('disable-gpu')
 app.commandLine.appendSwitch('no-sandbox')
 app.commandLine.appendSwitch('disable-software-rasterizer')
 app.commandLine.appendSwitch('use-gl', 'swiftshader') // 軟體渲染
 
-let mainWindow
-let phpServer
-
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
+        icon: 'resources/img/logo.ico',
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -30,7 +43,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
     // 啟動 PHP server
-    phpServer = exec('php artisan serve --port=8085', (err, stdout, stderr) => {
+    phpServer = exec('php artisan serve --host=127.0.0.1 --port=8085', (err, stdout, stderr) => {
         if (err) console.error(err)
     })
 
