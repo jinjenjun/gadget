@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { Head } from '@inertiajs/vue3';
 import '@/../scss/main.scss';
 
 const toolList = ref([
@@ -10,8 +11,9 @@ const toolList = ref([
 ]);
 </script>
 <template>
+    <Head title="首頁" />
     <div
-        class="text-primary h-[100vh] bg-light-brown flex w-full flex-col items-center justify-center overflow-hidden p-[30px] py-[100px] lg:px-[100px]"
+        class="text-primary h-[100vh] bg-light-brown flex min-w-[344px] w-full flex-col items-center justify-center overflow-hidden p-[30px] py-[100px] lg:px-[100px]"
     >
         <ol
             class="pl-10 list-disc text-card-title flex flex-col w-full items-start justify-start rounded-lg border-2 bg-white p-5 md:w-[50vw]"

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { Head } from '@inertiajs/vue3';
 import * as helpers from '@/Libs/helpers';
 import * as APIs from '@/APIs';
 import ElEpubReaderTrial from '@/Components/ElEpubReaderTrial.vue';
@@ -116,6 +117,7 @@ onMounted(() => {
 })
 </script>
 <template>
+    <Head title="轉換器" />
     <ElInfoLoading v-if="isLoading" />
     <div
         class="text-primary flex w-full items-center justify-center bg-gray-300"
@@ -123,7 +125,7 @@ onMounted(() => {
         v-if="!epubReaderData.active"
     >
         <div
-            class="bg-light-brown flex w-full flex-col items-center justify-center overflow-hidden p-[30px] py-[100px] lg:px-[100px]"
+            class="min-w-[344px] bg-light-brown flex w-full flex-col items-center justify-center overflow-hidden p-[30px] py-[100px] lg:px-[100px]"
             :style="{ height: 'calc(var(--vh, 1vh) * 100)' }"
         >
             <div ref="viewer" class="slow-blur-transition hidden h-full w-full" />
