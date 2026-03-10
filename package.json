@@ -43,7 +43,6 @@
     "build": {
         "appId": "com.gordon.gedget",
         "productName": "解鎖小工具",
-        "artifactName": "${productName}-${version}-${target}.${ext}",
         "compression": "maximum",
         "asar": true,
         "directories": {
