@@ -5,14 +5,14 @@ use Inertia\Inertia;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
-class TransformationController extends Controller
+class FixController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Transformation/Index');
+        return Inertia::render('Fix/Index');
     }
 
-    public function epubTransformation(Request $request): JsonResponse
+    public function epubFix(Request $request): JsonResponse
     {
         $request->validate([
             'file' => 'required|file|mimes:epub',
@@ -37,7 +37,7 @@ class TransformationController extends Controller
         $request->file('file')->move($inputDir, $safeName . '.epub');
 
         $node = '/usr/bin/node';
-        $script = base_path('resources/js/Libs/epub_transformation.js');
+        $script = base_path('resources/js/Libs/epub_fix.js');
 
         $process = proc_open(
             [$node, $script, $inputPath, $outputPath],
@@ -113,3 +113,4 @@ class TransformationController extends Controller
         ]);
     }
 }
+

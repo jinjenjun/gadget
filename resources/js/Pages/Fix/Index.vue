@@ -37,29 +37,29 @@ async function upload() {
     isLoading.value = true;
 
     try {
-        const res = await APIs.unlock.reader.epubTransformation(
-            route('transformation.epub'),
+        const res = await APIs.unlock.reader.epubFix(
+            route('fix.epub'),
             fd,
         );
 
         ElNotification({
-            title: '轉檔完成',
-            message: 'Epub檔案內容已成功轉換。',
+            title: '修復完成',
+            message: 'Epub檔案內容已成功修復。',
             type: 'success',
             offset: 100,
         });
 
         epubReaderData.value.outputFileUrl = res.data.epub_url;
-        helpers.devConsole.log('Epub轉檔成功結果:', res.data);
+        helpers.devConsole.log('Epub修復成功結果:', res.data);
     } catch (err) {
         const logData = err.response?.data || err.message || err;
         ElNotification({
-            title: '轉檔失敗',
-            message: '轉換Epub檔案時發生錯誤，請稍後再試。',
+            title: '修復失敗',
+            message: '修復Epub檔案時發生錯誤，請稍後再試。',
             type: 'error',
             offset: 100,
         });
-        helpers.devConsole.error('Epub轉檔失敗結果:', logData);
+        helpers.devConsole.error('Epub修復失敗結果:', logData);
     } finally {
         uploading.value = false;
         isLoading.value = false;
@@ -69,7 +69,7 @@ async function upload() {
 const clearEpubData = async () => {
     try {
         await APIs.unlock.reader.clearTempData(
-            route('transformation.cleanup')
+            route('fix.cleanup')
         );
 
         helpers.devConsole.log('清除暫存檔案成功');
@@ -117,7 +117,7 @@ onMounted(() => {
 })
 </script>
 <template>
-    <Head title="轉換器" />
+    <Head title="修復器" />
     <ElInfoLoading v-if="isLoading" />
     <div
         class="text-primary flex w-full items-center justify-center bg-gray-300"
@@ -137,9 +137,9 @@ onMounted(() => {
                         class="flex w-full flex-col items-start justify-center p-5 md:w-[50vw]"
                         v-if="!epubReaderData.outputFileUrl"
                     >
-                        <p class="mb-3">Epub檔案轉換器</p>
+                        <p class="mb-3">Epub檔案修復器:</p>
                         <p class="mb-8 text-sm text-gray-500">
-                            功能：將Indesign轉出的epub檔進行內容轉換
+                            功能：將有檔案缺損的epub檔進行修復
                         </p>
                         <div class="flex space-x-2 justify-center items-center">
                             <input
@@ -149,7 +149,7 @@ onMounted(() => {
                                 class="cursor-pointer w-full rounded !text-xs md:mb-0 p-[6px] lg:p-3 file:p-1 file:border-0 file:text-white file:rounded file:bg-orange-700 hover:file:cursor-pointer"
                             />
                             <ElInfoButton @click="upload" :disabled="uploading">
-                                {{ uploading ? '轉檔中...' : '開始轉換' }}
+                                {{ uploading ? '轉檔中...' : '開始修復' }}
                             </ElInfoButton>
                         </div>
                     </div>
@@ -159,7 +159,7 @@ onMounted(() => {
                             <ElInfoButton @click="downloadFile">下載</ElInfoButton>
                         </div>
                         <div class="flex justify-start items-center py-3 space-x-2">
-                            <p>返回轉換器:</p>
+                            <p>返回修復器:</p>
                             <ElInfoButton @click="resetData">返回</ElInfoButton>
                         </div>
                     </div>

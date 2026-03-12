@@ -34,6 +34,7 @@
     },
     "dependencies": {
         "adm-zip": "^0.5.16",
+        "cheerio": "^1.2.0",
         "crypto-js": "^4.2.0",
         "element-plus": "^2.13.3",
         "epubjs": "^0.3.93",
@@ -67,7 +68,9 @@
                 "portable",
                 {
                     "target": "nsis",
-                    "arch": ["x64"]
+                    "arch": [
+                        "x64"
+                    ]
                 }
             ]
         },

@@ -88,7 +88,7 @@ export const epubTransformation = (url, data) =>
     }),
   );
 
-export const epubStandardization = (url, data) =>
+export const epubFix = (url, data) =>
   useErrorHandler(
     UNLOCKRequest({
       method: 'POST',
