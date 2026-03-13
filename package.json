@@ -58,7 +58,20 @@
             "bootstrap/**/*",
             "routes/**/*",
             "composer.json",
-            "package.json"
+            "package.json",
+            "php/**/*",
+            "artisan"
+        ],
+        "extraResources": [
+            {
+                "from": "php",
+                "to": "php",
+                "filter": ["**/*"]
+            },
+            {
+                "from": "artisan",
+                "to": "artisan"
+            }
         ],
         "npmRebuild": false,
         "nodeGypRebuild": false,
