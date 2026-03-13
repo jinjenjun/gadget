@@ -59,7 +59,6 @@
             "routes/**/*",
             "composer.json",
             "package.json",
-            "php/**/*",
             "artisan"
         ],
         "extraResources": [
