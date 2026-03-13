@@ -58,8 +58,7 @@
             "bootstrap/**/*",
             "routes/**/*",
             "composer.json",
-            "package.json",
-            "artisan"
+            "package.json"
         ],
         "extraResources": [
             {
