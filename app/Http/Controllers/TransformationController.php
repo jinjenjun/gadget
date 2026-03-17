@@ -36,7 +36,10 @@ class TransformationController extends Controller
 
         $request->file('file')->move($inputDir, $safeName . '.epub');
 
-        $node = '/usr/bin/node';
+        $node = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'
+            ? 'C:\\Program Files\\nodejs\\node.exe'
+            : '/usr/bin/node';
+
         $script = base_path('resources/js/Libs/epub_transformation.js');
 
         $process = proc_open(
