@@ -8,11 +8,16 @@ const toolList = ref([
         name: 'Epub檔案轉換器',
         route: '/transformation',
     },
+
     // TODO: 隱藏開發中程式
     // {
     //     name: 'Epub檔案修復器',
     //     route: '/fix',
     // },
+    {
+        name: 'PDF保護文字添加器',
+        route: '/protection',
+    },
 ]);
 </script>
 <template>
