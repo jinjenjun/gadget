@@ -1,177 +1,175 @@
-const { app, BrowserWindow } = require('electron')
-const { spawn } = require('child_process')
-const path = require('path')
-const http = require('http')
-const fs = require('fs')
+// main.cjs
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const fs = require("fs");
+const http = require("http");
+const { spawn } = require("child_process");
 
-let mainWindow
-let phpServer
-
-// ------------------ 單一實例 ------------------
-const gotTheLock = app.requestSingleInstanceLock()
-if (!gotTheLock) {
-    console.log('[DEBUG] Another instance detected. Quitting.')
-    app.quit()
-}
-
-app.on('second-instance', () => {
-    console.log('[DEBUG] Second instance attempted.')
-    if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore()
-        mainWindow.focus()
-    }
-})
-
-// 判斷 dev / build
-const isDev = !app.isPackaged
+let mainWindow = null;
+let phpServer = null;
 
 // ------------------ 建立視窗 ------------------
 function createWindow() {
-    console.log('[DEBUG] Creating BrowserWindow...')
+    console.log("[DEBUG] Creating BrowserWindow...");
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         minWidth: 800,
         minHeight: 600,
-        icon: path.join(__dirname, '../resources/img/logo.ico'),
+        icon: path.join(__dirname, "../resources/img/logo.ico"),
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
-        }
-    })
+            contextIsolation: false,
+        },
+    });
 
-    mainWindow.loadURL('http://127.0.0.1:8085')
+    const url = "http://127.0.0.1:8085";
+    console.log(
+        `[DEBUG] ${!app.isPackaged ? "DEV" : "BUILD"} mode: loading URL`,
+        url,
+    );
 
-    mainWindow.on('closed', () => {
-        console.log('[DEBUG] BrowserWindow closed.')
-        mainWindow = null
+    mainWindow.loadURL(url);
+
+    mainWindow.webContents.on("did-finish-load", () => {
+        console.log("[DEBUG] BrowserWindow finished loading URL");
+    });
+
+    mainWindow.webContents.on(
+        "did-fail-load",
+        (event, errorCode, errorDescription, validatedURL) => {
+            console.error(
+                "[DEBUG] BrowserWindow failed to load:",
+                validatedURL,
+                errorCode,
+                errorDescription,
+            );
+        },
+    );
+
+    if (!app.isPackaged) {
+        mainWindow.webContents.openDevTools();
+    }
+
+    mainWindow.on("closed", () => {
+        console.log("[DEBUG] BrowserWindow closed.");
+        mainWindow = null;
 
         if (phpServer) {
-            console.log('[DEBUG] Killing PHP server...')
-            phpServer.kill()
-            phpServer = null
+            console.log("[DEBUG] Killing PHP server...");
+            phpServer.kill();
+            phpServer = null;
         }
-    })
+    });
 }
 
-// ------------------ 啟動 PHP ------------------
-function startPhpServer() {
-    const userDataPath = app.getPath('userData')
-    process.env.ELECTRON_USER_DATA = userDataPath
-    console.log('[DEBUG] ELECTRON_USER_DATA:', userDataPath)
-
-    let basePath, phpPath, iniPath, publicPath
-
-    if (isDev) {
-        // DEV 模式
-        basePath = path.resolve(__dirname, '..')
-        phpPath = path.join(basePath, 'resources', 'php', 'php.exe')
-        iniPath = path.join(basePath, 'resources', 'php', 'php.ini')
-        publicPath = path.join(basePath, 'public')
-
-        console.log('[DEBUG] DEV MODE')
-    } else {
-        // BUILD 模式（🔥 重點修正）
-        basePath = path.join(process.resourcesPath, 'app.asar.unpacked')
-
-        // ✅ php 在 resources/php（不是 unpacked）
-        phpPath = path.join(process.resourcesPath, 'php', 'php.exe')
-        iniPath = path.join(process.resourcesPath, 'php', 'php.ini')
-
-        publicPath = path.join(basePath, 'public')
-
-        console.log('[DEBUG] BUILD MODE')
-    }
-
-    console.log('[DEBUG] Laravel root:', basePath)
-    console.log('[DEBUG] PHP Path:', phpPath)
-    console.log('[DEBUG] PHP INI path:', iniPath)
-    console.log('[DEBUG] Public path:', publicPath)
-
-    // 🔥 防呆：檢查檔案存在
-    console.log('[CHECK] php.exe exists:', fs.existsSync(phpPath))
-    console.log('[CHECK] php.ini exists:', fs.existsSync(iniPath))
-    console.log('[CHECK] public exists:', fs.existsSync(publicPath))
-
-    if (!fs.existsSync(phpPath)) {
-        console.error('❌ php.exe NOT FOUND')
-        return
-    }
-
-    phpServer = spawn(
-        phpPath,
-        ['-c', iniPath, '-S', '127.0.0.1:8085', '-t', publicPath],
-        {
-            cwd: path.dirname(phpPath),
-            windowsHide: true,
-            env: process.env
-        }
-    )
-
-    attachPhpLogs()
-    waitForServer()
-}
-
-// ------------------ 監控 PHP stdout/stderr ------------------
-function attachPhpLogs() {
-    if (!phpServer) return
-
-    phpServer.stdout.on('data', (data) => {
-        console.log('[PHP]', data.toString())
-    })
-
-    phpServer.stderr.on('data', (data) => {
-        console.error('[PHP ERROR]', data.toString())
-    })
-
-    phpServer.on('close', (code) => {
-        console.log('[DEBUG] PHP server closed with code', code)
-    })
-}
-
-// ------------------ 等 Laravel 啟動 ------------------
+// ------------------ 等 Laravel PHP Server 啟動 ------------------
 function waitForServer() {
-    console.log('[DEBUG] Waiting for Laravel server...')
-
+    console.log("[DEBUG] Waiting for PHP server...");
     const check = () => {
-        http.get('http://127.0.0.1:8085', () => {
-            console.log('[DEBUG] Server responded, creating window...')
-            createWindow()
-        }).on('error', () => {
-            setTimeout(check, 300)
-        })
-    }
+        http.get("http://127.0.0.1:8085", (res) => {
+            console.log(
+                "[DEBUG] Server responded with status:",
+                res.statusCode,
+            );
+            console.log("[DEBUG] Server headers:", res.headers);
 
-    check()
+            let body = "";
+            res.on("data", (chunk) => {
+                body += chunk.toString();
+                if (body.length > 500) res.destroy();
+            });
+            res.on("end", () => {
+                console.log(
+                    "[DEBUG] First 500 bytes of response:\n",
+                    body.slice(0, 500),
+                );
+            });
+
+            console.log("[DEBUG] Server ready, creating window...");
+            createWindow();
+        }).on("error", (err) => {
+            console.error("[DEBUG] Server not ready, retrying...", err.message);
+            setTimeout(check, 300);
+        });
+    };
+
+    check();
 }
 
-// ------------------ APP 啟動 ------------------
-app.whenReady().then(() => {
-    console.log('[DEBUG] App is ready, starting PHP server...')
-    startPhpServer()
-})
+// ------------------ 啟動 PHP Server ------------------
+function startPhpServer() {
+    const userDataPath = app.getPath("userData");
+    process.env.ELECTRON_USER_DATA = userDataPath;
+    console.log("[DEBUG] ELECTRON_USER_DATA:", userDataPath);
 
-// ------------------ 關閉處理 ------------------
-app.on('window-all-closed', () => {
-    console.log('[DEBUG] All windows closed.')
+    let basePath, phpPath, iniPath, publicPath;
 
-    if (phpServer) {
-        console.log('[DEBUG] Killing PHP server...')
-        phpServer.kill()
+    if (!app.isPackaged) {
+        basePath = path.resolve(__dirname, "..");
+        phpPath = "C:\\Developer\\gadget\\php\\php.exe";
+        iniPath = path.join(path.dirname(phpPath), "php.ini");
+        publicPath = path.join(basePath, "public");
+        console.log("[DEBUG] DEV MODE");
+    } else {
+        basePath = path.join(process.resourcesPath, "app.asar.unpacked");
+        phpPath = path.join(process.resourcesPath, "php", "php.exe");
+        iniPath = path.join(process.resourcesPath, "php", "php.ini");
+        publicPath = path.join(basePath, "public");
+        console.log("[DEBUG] BUILD MODE");
     }
 
-    if (process.platform !== 'darwin') app.quit()
-})
+    // 檢查 PHP 與 public 目錄
+    if (!fs.existsSync(phpPath)) {
+        console.error(`[FATAL] PHP executable not found! Path: ${phpPath}`);
+        app.quit();
+        return;
+    }
 
-app.on('activate', () => {
-    if (!mainWindow) createWindow()
-})
+    if (!fs.existsSync(publicPath)) {
+        console.error(
+            `[FATAL] Public directory not found! Path: ${publicPath}`,
+        );
+        app.quit();
+        return;
+    }
 
-// ------------------ crash 保護 ------------------
-process.on('uncaughtException', (err) => {
-    console.error('UNCAUGHT ERROR:', err)
-})
+    // spawn args
+    const phpArgs = [];
+    if (iniPath && fs.existsSync(iniPath)) phpArgs.push("-c", iniPath);
+    phpArgs.push("-S", "127.0.0.1:8085", "-t", publicPath);
 
-process.on('unhandledRejection', (err) => {
-    console.error('PROMISE ERROR:', err)
-})
+    phpServer = spawn(phpPath, phpArgs, {
+        cwd: basePath,
+        windowsHide: true,
+        env: process.env,
+    });
+
+    phpServer.stdout.on("data", (data) =>
+        console.log("[PHP]", data.toString()),
+    );
+    phpServer.stderr.on("data", (data) =>
+        console.error("[PHP ERROR]", data.toString()),
+    );
+    phpServer.on("close", (code) =>
+        console.log("[DEBUG] PHP server closed with code", code),
+    );
+
+    waitForServer();
+}
+
+// ------------------ App Ready ------------------
+app.whenReady().then(() => {
+    console.log("[DEBUG] App ready. isDev=", !app.isPackaged);
+    startPhpServer();
+});
+
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+        app.quit();
+    }
+});
+
+app.on("activate", () => {
+    if (mainWindow === null) createWindow();
+});

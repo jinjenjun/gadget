@@ -139,7 +139,7 @@ onMounted(() => {
                     >
                         <p class="mb-3">Epub檔案轉換器</p>
                         <p class="mb-8 text-sm text-gray-500">
-                            功能：將Indesign轉出的epub檔進行內容轉換
+                            功能：將InDesign轉出的Epub檔進行內容轉換
                         </p>
                         <div class="flex space-x-2 justify-center items-center">
                             <input

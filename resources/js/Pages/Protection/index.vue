@@ -1,17 +1,16 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { Head } from '@inertiajs/vue3';
-import * as helpers from '@/Libs/helpers';
-import * as APIs from '@/APIs';
-import ElEpubReaderTrial from '@/Components/ElEpubReaderTrial.vue';
-import ElInfoButton from '@/Components/ElInfoButton.vue';
-import ElInfoLoading from '@/Components/ElInfoLoading.vue';
+import { ref, onMounted } from "vue";
+import { Head } from "@inertiajs/vue3";
+import * as helpers from "@/Libs/helpers";
+import * as APIs from "@/APIs";
+import ElInfoButton from "@/Components/ElInfoButton.vue";
+import ElInfoLoading from "@/Components/ElInfoLoading.vue";
 
 const isLoading = ref(false);
 const file = ref(null);
 const uploading = ref(false);
 const epubReaderData = ref({
-    outputFileUrl: '',
+    outputFileUrl: "",
     active: false,
 });
 
@@ -22,44 +21,44 @@ function onChange(e) {
 async function upload() {
     if (!file.value) {
         ElNotification({
-            title: '請選擇檔案',
-            message: '請於本機選擇上傳檔案',
-            type: 'warning',
+            title: "請選擇檔案",
+            message: "請於本機選擇上傳檔案",
+            type: "warning",
             offset: 100,
         });
         return;
     }
 
     const fd = new FormData();
-    fd.append('file', file.value);
+    fd.append("file", file.value);
 
     uploading.value = true;
     isLoading.value = true;
 
     try {
-        const res = await APIs.unlock.reader.epubTransformation(
-            route('transformation.epub'),
+        const res = await APIs.unlock.reader.pdfProtection(
+            route("protection.pdf"),
             fd,
         );
 
         ElNotification({
-            title: '轉檔完成',
-            message: 'PDF檔案內容已成功轉換。',
-            type: 'success',
+            title: "轉檔完成",
+            message: "PDF檔案內容已成功轉換。",
+            type: "success",
             offset: 100,
         });
 
-        epubReaderData.value.outputFileUrl = res.data.epub_url;
-        helpers.devConsole.log('PDF轉檔成功結果:', res.data);
+        epubReaderData.value.outputFileUrl = res.data.pdf_url;
+        console.log("PDF轉檔成功結果:", res.data);
     } catch (err) {
         const logData = err.response?.data || err.message || err;
         ElNotification({
-            title: '轉檔失敗',
-            message: '轉換PDF檔案時發生錯誤，請稍後再試。',
-            type: 'error',
+            title: "轉檔失敗",
+            message: "轉換PDF檔案時發生錯誤，請稍後再試。",
+            type: "error",
             offset: 100,
         });
-        helpers.devConsole.error('PDF轉檔失敗結果:', logData);
+        helpers.devConsole.error("PDF轉檔失敗結果:", logData);
     } finally {
         uploading.value = false;
         isLoading.value = false;
@@ -68,29 +67,26 @@ async function upload() {
 
 const clearEpubData = async () => {
     try {
-        await APIs.unlock.reader.clearTempData(
-            route('transformation.cleanup')
-        );
+        await APIs.unlock.reader.clearTempData(route("protection.cleanup"));
 
-        helpers.devConsole.log('清除暫存檔案成功');
-
+        helpers.devConsole.log("清除暫存檔案成功");
     } catch (err) {
         const logData = err.response?.data || err.message || err;
 
         ElNotification({
-            title: '刪除失敗',
-            message: '刪除檔案時發生錯誤，請稍後再試。',
-            type: 'error',
+            title: "刪除失敗",
+            message: "刪除檔案時發生錯誤，請稍後再試。",
+            type: "error",
             offset: 100,
         });
 
-        helpers.devConsole.error('清除暫存檔案失敗', logData);
+        helpers.devConsole.error("清除暫存檔案失敗", logData);
     }
 };
 
 const resetData = () => {
     epubReaderData.value = {
-        outputFileUrl: '',
+        outputFileUrl: "",
         active: false,
     };
     file.value = null;
@@ -101,9 +97,9 @@ function downloadFile() {
     if (!epubReaderData.value.outputFileUrl) return;
 
     const timestamp = Date.now();
-    const filename = `converted_${timestamp}.epub`;
+    const filename = `converted_${timestamp}.pdf`;
 
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = epubReaderData.value.outputFileUrl;
     link.download = filename;
 
@@ -114,7 +110,7 @@ function downloadFile() {
 
 onMounted(() => {
     resetData();
-})
+});
 </script>
 <template>
     <Head title="添加器" />
@@ -128,8 +124,13 @@ onMounted(() => {
             class="min-w-[344px] bg-light-brown flex w-full flex-col items-center justify-center overflow-hidden p-[30px] py-[100px] lg:px-[100px]"
             :style="{ height: 'calc(var(--vh, 1vh) * 100)' }"
         >
-            <div ref="viewer" class="slow-blur-transition hidden h-full w-full" />
-            <div class="text-card-title flex w-full flex-col items-center justify-center">
+            <div
+                ref="viewer"
+                class="slow-blur-transition hidden h-full w-full"
+            />
+            <div
+                class="text-card-title flex w-full flex-col items-center justify-center"
+            >
                 <div
                     class="flex flex-col w-full items-center justify-start rounded-lg border-2 bg-white p-5 md:w-[50vw]"
                 >
@@ -137,9 +138,9 @@ onMounted(() => {
                         class="flex w-full flex-col items-start justify-center p-5 md:w-[50vw]"
                         v-if="!epubReaderData.outputFileUrl"
                     >
-                        <p class="mb-3">PDF保護文字添加器</p>
+                        <p class="mb-3">PDF亂碼添加器</p>
                         <p class="mb-8 text-sm text-gray-500">
-                            功能：將PDF檔案添加保護文字防止OCR複製
+                            功能：將PDF檔案添加亂碼防止資料外流
                         </p>
                         <div class="flex space-x-2 justify-center items-center">
                             <input
@@ -149,26 +150,36 @@ onMounted(() => {
                                 class="cursor-pointer w-full rounded !text-xs md:mb-0 p-[6px] lg:p-3 file:p-1 file:border-0 file:text-white file:rounded file:bg-orange-700 hover:file:cursor-pointer"
                             />
                             <ElInfoButton @click="upload" :disabled="uploading">
-                                {{ uploading ? '轉檔中...' : '開始轉換' }}
+                                {{ uploading ? "轉檔中..." : "開始轉換" }}
                             </ElInfoButton>
                         </div>
                     </div>
-                    <div class="flex flex-col w-full items-start justify-center p-5 md:w-[50vw]" v-if="epubReaderData.outputFileUrl">
-                        <div class="flex justify-start items-center py-3 space-x-2">
+                    <div
+                        class="flex flex-col w-full items-start justify-center p-5 md:w-[50vw]"
+                        v-if="epubReaderData.outputFileUrl"
+                    >
+                        <div
+                            class="flex justify-start items-center py-3 space-x-2"
+                        >
                             <p>下載檔案:</p>
-                            <ElInfoButton @click="downloadFile">下載</ElInfoButton>
+                            <ElInfoButton @click="downloadFile"
+                                >下載</ElInfoButton
+                            >
                         </div>
-                        <div class="flex justify-start items-center py-3 space-x-2">
+                        <div
+                            class="flex justify-start items-center py-3 space-x-2"
+                        >
                             <p>返回添加器:</p>
                             <ElInfoButton @click="resetData">返回</ElInfoButton>
                         </div>
                     </div>
                 </div>
-                <div class="w-full flex flex-col items-end justify-end md:w-[50vw] mt-5 underline">
+                <div
+                    class="w-full flex flex-col items-end justify-end md:w-[50vw] mt-5 underline"
+                >
                     <a href="/">返回首頁</a>
                 </div>
             </div>
         </div>
     </div>
 </template>
-

@@ -97,6 +97,15 @@ export const epubFix = (url, data) =>
     }),
   );
 
+export const pdfProtection = (url, data) =>
+useErrorHandler(
+UNLOCKRequest({
+    method: 'POST',
+    url,
+    data,
+}),
+);
+
 export const clearTempData = (url, data) =>
   useErrorHandler(
     UNLOCKRequest({

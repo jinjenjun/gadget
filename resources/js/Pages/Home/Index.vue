@@ -15,7 +15,7 @@ const toolList = ref([
     //     route: '/fix',
     // },
     {
-        name: 'PDF保護文字添加器',
+        name: 'PDF亂碼添加器',
         route: '/protection',
     },
 ]);

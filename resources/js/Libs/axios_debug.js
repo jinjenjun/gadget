@@ -86,7 +86,17 @@ export const useErrorHandler = (promise) => {
     const { statusCode, message } = normalizeError(error);
     const mapping = authReactions[statusCode] || null;
 
-    console.error(`title: ${mapping?.title || '發生錯誤'}, message: ${mapping?.message || message || '請稍後再試'}`);
+    // 🔥 原本錯誤
+    console.error(
+      `title: ${mapping?.title || '發生錯誤'}, message: ${mapping?.message || message || '請稍後再試'}`
+    );
+
+    // 🔥 加這段（關鍵）
+    console.log("🔥 完整錯誤:", error);
+
+    if (error.response) {
+      console.log("🔥 後端回傳:", error.response.data);
+    }
 
     mapping?.action?.();
 
