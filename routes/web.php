@@ -31,4 +31,20 @@ Route::post('/protection/pdf', [ProtectionController::class, 'pdfProtection'])
 Route::post('/protection/cleanup', [ProtectionController::class, 'clearPDFTempFiles'])
     ->name('protection.cleanup');
 
+// TODO: 開發測試用，有需要時再開啟
+// Route::get('/php-check', function () {
+//     return response()->json([
+//         'marker' => 'gadget-php-check-2026-03-31',
+//         'app_env' => config('app.env'),
+//         'app_url' => config('app.url'),
+//         'php_binary' => PHP_BINARY,
+//         'loaded_ini' => php_ini_loaded_file(),
+//         'upload_max_filesize' => ini_get('upload_max_filesize'),
+//         'post_max_size' => ini_get('post_max_size'),
+//         'memory_limit' => ini_get('memory_limit'),
+//         'max_execution_time' => ini_get('max_execution_time'),
+//         'max_input_time' => ini_get('max_input_time'),
+//     ]);
+// });
+
 require __DIR__.'/auth.php';
